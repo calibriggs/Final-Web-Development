@@ -1,0 +1,40 @@
+body{
+    background-color: rgb(170, 214, 253);
+}
+h1{
+    color: blue;
+    font-weight: bold;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+h2{
+    color: blue;
+}
+
+.info_paragraph{
+    max-width: 1000px;
+    font-size: 20px;
+}
+
+.list{
+    top: 525px;
+    left: 225px;
+    right: 650px;
+    position: absolute;
+    background-color:white;
+    border: 1.5px solid blue;
+    font-size: 18px;
+}
+
+.underline{
+    text-decoration:underline;
+}
+
+.sidebar{
+    right: 25px;
+    left: 1040px;
+    top: 15px;
+    position: fixed;
+    background-color:white;
+    border: 1.5px solid blue;
+}
+

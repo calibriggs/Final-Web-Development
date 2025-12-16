@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Boggle Game</title>
+<style>
+body { margin:0; font-family:Arial,sans-serif; background:#1e4fa1; display:flex; flex-direction:column; height:100vh; }
+#top { display:flex; flex:1; }
+#left, #right { width:20%; padding:15px; box-sizing:border-box; }
+#center { width:60%; background:#1e4fa1; color:white; text-align:center; }
+#timer { font-size:32px; margin:20px 0; }
+#board { display:grid; grid-template-columns:repeat(4,80px); gap:10px; justify-content:center; }
+.tile { width:80px; height:80px; background:#ffd400; font-size:32px; font-weight:bold; display:flex; align-items:center; justify-content:center; border-radius:10px; color:black; }
+#wordInput { width:100%; height:80%; background:white; border:2px solid #1e4fa1; border-radius:8px; padding:10px; box-sizing:border-box; overflow-y:auto; white-space:pre-wrap; }
+#instructions { background:#fff3b0; color:black; padding:15px; font-size:16px; }
+#instructions a { color:blue; text-decoration:underline; }
+button { margin:10px; padding:10px 20px; font-size:16px; border:none; border-radius:5px; background:#ffd400; cursor:pointer; }
+</style>
+</head>
+<body>
+<div id="top">
+<div id="center">
+<div id="timer">1:00</div>
+<div id="board"></div>
+<button id="startButton">Start Timer</button>
+</div>
+<div id="right">
+<h2>Your Words</h2>
+<div id="wordInput" contenteditable="true"></div>
+</div>
+</div>
+<div id="instructions">
+<h3>Instructions:</h3>
+<ol>
+<li>Compare your words to the <a href="https://scrabble.merriam.com/" target="_blank">Scrabble dictionary</a> to ensure it is a playable word.</li>
+<li>Compare word lengths to this list for points:
+<ul>
+<li>3 letters: 1 point</li>
+<li>4 letters: 1 point</li>
+<li>5 letters: 2 points</li>
+<li>6 letters: 3 points</li>
+<li>7 letters: 5 points</li>
+</ul>
+</li>
+</ol>
+</div>
+<script>
+var board=document.getElementById('board');
+var letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+var vowels='AEIOU';
+function generateBoard(){
+    var tiles=[];
+    var vowelCount=0;
+    while(vowelCount<3){
+        tiles=[];
+        vowelCount=0;
+        for(var i=0;i<16;i++){
+            var l=letters.charAt(Math.floor(Math.random()*letters.length));
+            if(vowels.indexOf(l)!==-1)vowelCount++;
+            tiles.push(l);
+        }
+    }
+    board.innerHTML='';
+    for(var j=0;j<tiles.length;j++){
+        var d=document.createElement('div');
+        d.className='tile';
+        d.innerHTML=tiles[j];
+        board.appendChild(d);
+    }
+}
+generateBoard();
+
+var time=60;
+var timerEl=document.getElementById('timer');
+var timer=null;
+var startButton=document.getElementById('startButton');
+var input=document.getElementById('wordInput');
+var totalScore=0;
+
+startButton.addEventListener('click',function(){
+    input.contentEditable='true';
+    if(timer) clearInterval(timer);
+    time=60;
+    timerEl.innerHTML='1:00';
+    timer=setInterval(function(){
+        time--;
+        var s=time<10?'0'+time:time;
+        timerEl.innerHTML='0:'+s;
+        if(time<=0){
+            clearInterval(timer);
+            input.contentEditable='false';
+            calculateScore();
+            alert('Time is up! Your score: '+totalScore);
+        }
+    },1000);
+});
+
+input.addEventListener('keydown',function(e){
+    if(e.keyCode===13){
+        e.preventDefault();
+        insertNewLine();
+    }
+});
+function insertNewLine(){
+    document.execCommand('insertHTML',false,'\n');
+}
+function calculateScore(){
+    var words=input.innerText.split('\n');
+    totalScore=0;
+    for(var i=0;i<words.length;i++){
+        var w=words[i].trim();
+        if(w==='') continue;
+        var len=w.length;
+        if(len<=2) totalScore+=0;
+        else if(len<=4) totalScore+=1;
+        else if(len===5) totalScore+=2;
+        else if(len===6) totalScore+=3;
+        else if(len===7) totalScore+=5;
+        else totalScore+=11;
+    }
+}
+</script>
+</body>
+</html>
